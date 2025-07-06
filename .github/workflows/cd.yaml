@@ -16,10 +16,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Container Apps environment
+      - name: Deploy to Azure Container Apps
         run: |
           az containerapp update \
             --name myapp \
             --resource-group ${{ secrets.CONTAINER_APP_RESOURCE_GROUP }} \
-            --environment ${{ secrets.CONTAINER_APP_ENVIRONMENT }} \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/demo-app:${{ github.sha }}
