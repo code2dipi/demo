@@ -21,4 +21,5 @@ jobs:
           az containerapp update \
             --name myapp \
             --resource-group ${{ secrets.CONTAINER_APP_RESOURCE_GROUP }} \
+            --environment ${{ secrets.CONTAINER_APP_ENVIRONMENT }} \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/demo-app:${{ github.sha }}
