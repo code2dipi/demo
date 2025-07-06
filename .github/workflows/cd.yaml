@@ -1,27 +1,40 @@
-name: CD Pipeline
+name: CD Pipeline (Deploy to Azure Container Apps)
 
 on:
   workflow_run:
-    workflows: ["CI Pipeline"]
-    types:
-      - completed
+    workflows: ["CI Pipeline"]  # Trigger after CI completes
+    types: [completed]
+    branches: [master]  # Deploy only from main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Log in to Azure
+      # 1. Authenticate with Azure
+      - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Container Apps
+      # 2. Install/update Azure CLI & Container Apps extension
+      - name: Setup Azure CLI
         run: |
+          az upgrade --yes
+          az extension add --name containerapp --upgrade
+
+      # 3. Deploy to Azure Container Apps
+      - name: Deploy Container App
+        run: |
+          # Update the container image (creates a new revision)
           az containerapp update \
-            --name myapp \
+            --name ${{ vars.ACA_NAME }} \
             --resource-group ${{ secrets.CONTAINER_APP_RESOURCE_GROUP }} \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/demo-app:${{ github.sha }} \
+            --revision-suffix ${{ github.sha }}  
+
+    
+          az containerapp ingress update \
+            --name ${{ vars.ACA_NAME }} \
+            --resource-group ${{ secrets.CONTAINER_APP_RESOURCE_GROUP }} \
             --target-port 8083 \
-            --ingress external
-            
+            --type external
