@@ -21,7 +21,7 @@ jobs:
           az containerapp update \
             --name myapp \
             --resource-group ${{ secrets.CONTAINER_APP_RESOURCE_GROUP }} \
-            --image ${{ secrets.ACR_NAME }}.azurecr.io/demo-app:${{ github.sha }}
+            --image ${{ secrets.ACR_NAME }}.azurecr.io/demo-app:${{ github.sha }} \
             --target-port 8083 \
             --ingress external
             
