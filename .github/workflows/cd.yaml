@@ -23,5 +23,5 @@ jobs:
             --resource-group ${{ secrets.CONTAINER_APP_RESOURCE_GROUP }} \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/demo-app:${{ github.sha }}
             --target-port 8083 \
-            --ingress 'external'
+            --ingress external
             
