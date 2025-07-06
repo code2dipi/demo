@@ -30,7 +30,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t demo-app:${{ github.sha }} .
-
+      #
       - name: Push Docker Image to ACR
         run: |
           az acr login --name ${{ secrets.ACR_NAME }}
